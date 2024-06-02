@@ -16,7 +16,7 @@ Russia,Moscow,144400000
 The following code block:
 
 ~~~
-```csvtable
+```csvtable2
 source: countries.csv
 ```
 ~~~
@@ -71,7 +71,7 @@ See "Filtering displayed rows" for an example of a filter expression in action, 
 You can use the `columns` field to control which columns of your CSV file to render, e.g:
 
 ~~~
-```csvtable
+```csvtable2
 columns:
 - name
 - population
@@ -105,7 +105,7 @@ source: my_csv_file.csv
 It's also possible for you to set better names for your columns or use expressions:
 
 ~~~
-```csvtable
+```csvtable2
 columns:
 - expression: name
   name: Country Name
@@ -143,7 +143,7 @@ source: my_csv_file.csv
 Maybe you would like to display only a subset of the rows of your CSV?  If so, you can provide a `filter` expression to limit which rows are shown:
 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 filter: population < 100000000
 ```
@@ -167,7 +167,7 @@ filter: population < 100000000
 By default, the parser will attempt to cast the values of each field to an integer, boolean, or date object where appropriate for use in your filter expressions.  Also, note that your filter expression can also be provided as a list; those expressions will be and-ed together, e.g.:
 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 filter:
 - population < 100000000
@@ -182,7 +182,7 @@ Note that the filtering language requires that you use double-quoted strings in 
 If you would like to sort the rows of your displayed CSV, you can provide a sort expression:
 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 sortBy: name
 ```
@@ -214,7 +214,7 @@ sortBy: name
 Additionally, you can specify your `sortBy` expression as a list; the document will be sorted by all specified fields in rank order:
 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 sortBy:
 - columnOne
@@ -225,7 +225,7 @@ sortBy:
 It's also possible for you to sort your displayed data in reverse order if you specify your `sortBy` expression using an extended format allowing you to specify both the expression and direction of sort:
 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 sortBy:
 - expression: name
@@ -262,8 +262,37 @@ Options to use for decoding the referenced CSV file; see https://csv.js.org/pars
 
 Example: Customize delimiter: 
 ~~~
-```csvtable
+```csvtable2
 source: my_csv_file.csv
 csvOptions:
   delimiter: ","
 ```
+~~~
+
+### Columns with spaces or not compatoble symbols
+~~~
+```csvtable2
+source: csvtable34.csv
+csvOptions:
+  delimiter: ";"
+columns:
+- csv_column: the country                        # select by csv column name
+- expression: column_1 / 1000                    # calculate on this data
+  name: column_1
+  csv_column: the population
+  header: Population 1
+- expression: column_2 / 1000
+  name: column_2
+  csv_column: the population
+  header: Population 2
+  show: 0                                        # hide intermediate calculations
+- csv_column: the population
+  header: Population 3
+- csv_column: the population                     # select by csv column name
+- expression: column_1                           # calculate on csv_column of another column
+- expression: column_2
+  header: Population 6
+- expression: __result__column_2 / 1000          # calculate on result of calculation of another column
+  header: Population 7
+```
+~~~

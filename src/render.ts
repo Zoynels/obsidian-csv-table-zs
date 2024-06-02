@@ -1,9 +1,9 @@
 import { MarkdownRenderer, MarkdownRenderChild } from 'obsidian';
 
-import { getCellDisplay, getColumnInfo } from './util'
+import { ColumnInfo, getCellDisplay, getColumnInfo } from './util'
 
 export class TableRenderer extends MarkdownRenderChild {
-  constructor(public columns: string[], public rows: any[], public container: HTMLElement) {
+  constructor(public columns: ColumnInfo[], public rows: any[], public container: HTMLElement) {
     super(container)
   }
 
@@ -13,27 +13,34 @@ export class TableRenderer extends MarkdownRenderChild {
 
   async render() {
     const tableEl = this.container.createEl('table')
+    tableEl.addClass('obsidian-csv-table-table');
 
     const theadEl = tableEl.createEl('thead')
+    theadEl.addClass('obsidian-csv-table-thead');
     const headerEl = theadEl.createEl('tr')
+    headerEl.addClass('obsidian-csv-table-tr');
     const tbodyEl = tableEl.createEl('tbody')
+    tbodyEl.addClass('obsidian-csv-table-tbody');
 
-    const columnNames: string[] = []
+    const columnNames: ColumnInfo[] = []
 
     for (const column of this.columns) {
-      const columnInfo = getColumnInfo(column)
-
-      headerEl.createEl('th', { text: columnInfo.name })
-      columnNames.push(columnInfo.name)
+      const columnInfo = column;
+      if (columnInfo.show > 0) {
+        headerEl.createEl('th', { text: columnInfo.header })
+        headerEl.addClass('obsidian-csv-table-headerEl-th');
+        columnNames.push(columnInfo)
+      }
     }
 
     for (const row of this.rows) {
       const trEl = tbodyEl.createEl('tr')
+      trEl.addClass('obsidian-csv-table-tbody-tr');
 
       for (const columnName of columnNames) {
         const tdEl = trEl.createEl('td');
-
-        const cellTextMD = getCellDisplay(row, columnName);
+        tdEl.addClass('obsidian-csv-table-tbody-tr-td');
+        const cellTextMD = getCellDisplay(row, columnName.header);
 
         MarkdownRenderer.render(app, cellTextMD, tdEl, "", this);
 

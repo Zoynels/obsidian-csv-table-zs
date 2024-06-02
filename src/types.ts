@@ -1,13 +1,17 @@
 import { Options } from 'csv-parse'
+import { ColumnInfo } from './util'
 
 export interface CsvTableData {
-  columns: string[],
+  columns: ColumnInfo[],
   rows: Record<string, any>[]
 }
 
 export interface NamedColumn {
   name: string
+  header: string
   expression: string
+  csv_column: string
+  show: number
 }
 
 export interface ExtendedSortExpression {

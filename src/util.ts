@@ -90,17 +90,33 @@ export function getCellDisplay(row: Record<string, any>, expression: string): an
 
 export interface ColumnInfo {
   name: string
+  header: string
   expression: string
+  csv_column: string,
+  show: number
 }
 
-export function getColumnInfo(column: string | ColumnInfo): ColumnInfo {
+export function getColumnInfo(column: string | ColumnInfo, expression: string): ColumnInfo {
   if (typeof column === 'string') {
-    return {
-      name: column,
-      expression: column
+    let res: ColumnInfo = {
+      name: expression,
+      header: column,
+      expression: expression,
+      csv_column: column,
+      show: 1
     }
+    return res
   } else {
-    return column
+
+    let res: ColumnInfo = {
+      name: column.name || expression,
+      header: column.header || column.name || column.csv_column || expression,
+      expression: column.expression || expression,
+      csv_column: column.csv_column,
+      show: column.show !== undefined ? column.show : 1
+
+    }
+    return res
   }
 }
 

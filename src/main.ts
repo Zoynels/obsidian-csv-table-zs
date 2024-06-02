@@ -7,7 +7,7 @@ import { CsvTableSpec } from "./types";
 export default class CsvTablePlugin extends Plugin {
   async onload() {
     this.registerMarkdownCodeBlockProcessor(
-      "csvtable",
+      "csvtable2",
       async (csvSpecString: string, el, ctx) => {
         try {
           let tableSpec: CsvTableSpec = {

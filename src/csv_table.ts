@@ -2,7 +2,7 @@ import parseCsv from 'csv-parse/lib/sync'
 import { compileExpression } from 'filtrex'
 import { CsvTableSpec, CsvTableData, ExtendedSortExpression } from './types'
 
-import { applyRowFilters, getColumnInfo, evaluateExpression, sortRows, getArrayForArrayOrObject, getSortExpression } from './util'
+import { applyRowFilters, getColumnInfo, evaluateExpression, sortRows, getArrayForArrayOrObject, getSortExpression, ColumnInfo } from './util'
 
 
 export function getFilteredCsvData(
@@ -21,23 +21,39 @@ export function getFilteredCsvData(
     cast, trim, columns, skip_empty_lines, ...extraOptions
   }
   const parsedCsvData = parseCsv(csvData, csvOptions)
-  const columnNames: string[] = []
+  const columnNames: ColumnInfo[] = []
   const rowColumns: string[] = Object.keys(parsedCsvData[0])
 
-  try {
-    for (const column of csvSpec.columns ?? rowColumns) {
-      const columnInfo = getColumnInfo(column)
 
+  try {
+    let index = 0;
+    let columns: ColumnInfo[] = [];
+    for (const column of csvSpec.columns ?? rowColumns) {
+      index = index + 1;
+      const columnInfo = getColumnInfo(column, "col" + index);
+      columns.push(columnInfo);
+    }
+
+    for (const columnInfo of columns) {
       // Do not attempt to compile/set the expression value
       // if it already exists in our known row columns
-      if (rowColumns.indexOf(columnInfo.name) === -1) {
+      if (rowColumns.indexOf(columnInfo.header) === -1) {
         const expression = compileExpression(columnInfo.expression)
         for (const row of parsedCsvData) {
-          row[columnInfo.name] = evaluateExpression(row, expression, csvSpec.columnVariables)
+
+          let row_new: any = {};
+          for (const columnInfo2 of columns) {
+            row_new[columnInfo2.name] = row[columnInfo2.csv_column];
+            row_new["__result__" + columnInfo2.name] = row[columnInfo2.header]
+          }
+          //console.log("#row_new");
+          //console.log(row_new);
+          row[columnInfo.header] = evaluateExpression(row_new, expression, csvSpec.columnVariables)
+          //console.log(row);
         }
       }
 
-      columnNames.push(columnInfo.name)
+      columnNames.push(columnInfo)
     }
   } catch (e) {
     throw new Error(`Error evaluating column expressions: ${e.message}.`)
