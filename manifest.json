@@ -1,10 +1,19 @@
 {
-	"id": "obsidian-csv-table",
-	"name": "CSV Table",
-	"version": "1.2.0",
-	"minAppVersion": "0.11.10",
+	"id": "obsidian-csv-table-v2-zs",
+	"name": "CSV Table modified Zoynels",
+	"version": "1.2.0-b20240602",
+	"minAppVersion": "1.5.7-1",
 	"description": "Render CSV data as a table within your notes.",
 	"author": "Adam Coddington <me@adamcoddington.net>",
 	"authorUrl": "https://coddingtonbear.net/",
+	"contributors": [
+		{
+			"name": "Zoynels",
+			"url": "https://github.com/Zoynels/obsidian-csv-table-zs"
+		}
+	],
+	"bugs": {
+		"url": "https://github.com/Zoynels/obsidian-csv-table-zs/issues"
+	},
 	"isDesktopOnly": false
 }
