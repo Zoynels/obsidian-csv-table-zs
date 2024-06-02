@@ -1,4 +1,4 @@
-import { MarkdownRenderChild } from 'obsidian';
+import { MarkdownRenderer, MarkdownRenderChild } from 'obsidian';
 
 import { getCellDisplay, getColumnInfo } from './util'
 
@@ -31,7 +31,28 @@ export class TableRenderer extends MarkdownRenderChild {
       const trEl = tbodyEl.createEl('tr')
 
       for (const columnName of columnNames) {
-        trEl.createEl('td', { text: getCellDisplay(row, columnName) })
+        const tdEl = trEl.createEl('td');
+
+        const cellTextMD = getCellDisplay(row, columnName);
+
+        MarkdownRenderer.render(app, cellTextMD, tdEl, "", this);
+
+        const fragment = document.createDocumentFragment();
+        tdEl.childNodes.forEach((child, index) => {
+          if (child instanceof Element && child.tagName === 'P') {
+            while (child.firstChild) {
+              fragment.appendChild(child.firstChild);
+            }
+            if (index < tdEl.childNodes.length - 1) {
+              fragment.append(document.createElement('br'));
+            }
+          } else {
+            fragment.append(child.cloneNode(true));
+          }
+        });
+
+        tdEl.innerHTML = '';
+        tdEl.append(fragment);
       }
     }
   }
