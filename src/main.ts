@@ -23,7 +23,7 @@ export default class CsvTablePlugin extends Plugin {
             throw new Error("Parameter 'source' is required.");
           }
 
-          const file = this.app.vault.getAbstractFileByPath(tableSpec.source);
+          const file = this.app.metadataCache.getFirstLinkpathDest(tableSpec.source, "");
           if (!(file instanceof TFile)) {
             throw new Error(
               `CSV file '${tableSpec.source}' could not be found.`
