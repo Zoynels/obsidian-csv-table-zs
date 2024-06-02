@@ -44,11 +44,15 @@ export function getFilteredCsvData(
           let row_new: any = {};
           for (const columnInfo2 of columns) {
             row_new[columnInfo2.name] = row[columnInfo2.csv_column];
+            row_new["__name__" + columnInfo2.name] = row[columnInfo2.csv_column]
             row_new["__result__" + columnInfo2.name] = row[columnInfo2.header]
           }
           //console.log("#row_new");
           //console.log(row_new);
           row[columnInfo.header] = evaluateExpression(row_new, expression, csvSpec.columnVariables)
+          row[columnInfo.name] = row[columnInfo.csv_column]
+          row["__name__" + columnInfo.name] = row[columnInfo.csv_column]
+          row["__result__" + columnInfo.name] = row[columnInfo.header]
           //console.log(row);
         }
       }
