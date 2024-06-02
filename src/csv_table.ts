@@ -53,6 +53,21 @@ export function getFilteredCsvData(
           row[columnInfo.name] = row[columnInfo.csv_column]
           row["__name__" + columnInfo.name] = row[columnInfo.csv_column]
           row["__result__" + columnInfo.name] = row[columnInfo.header]
+          row["__header__" + columnInfo.header] = row[columnInfo.header]
+        }
+      } else {
+
+        console.log(2);
+        for (const row of parsedCsvData) {
+          if (!(columnInfo.name in row)) {
+            row[columnInfo.name] = row[columnInfo.csv_column]
+          }
+          if (!(columnInfo.header in row)) {
+            row[columnInfo.header] = row[columnInfo.csv_column]
+          }
+          row["__name__" + columnInfo.name] = row[columnInfo.csv_column]
+          row["__result__" + columnInfo.name] = row[columnInfo.header]
+          row["__header__" + columnInfo.name] = row[columnInfo.header]
           //console.log(row);
         }
       }

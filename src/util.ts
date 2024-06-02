@@ -111,7 +111,7 @@ export function getColumnInfo(column: string | ColumnInfo, expression: string): 
     let res: ColumnInfo = {
       name: column.name || expression,
       header: column.header || column.name || column.csv_column || expression,
-      expression: column.expression || expression,
+      expression: column.expression || column.name || expression,
       csv_column: column.csv_column,
       show: column.show !== undefined ? column.show : 1
 
