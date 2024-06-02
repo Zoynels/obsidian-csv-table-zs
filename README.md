@@ -255,3 +255,15 @@ sortBy:
         </tr>
     </tbody>
 </table>
+
+### CSV decoding options
+
+Options to use for decoding the referenced CSV file; see https://csv.js.org/parse/options/ for available options.
+
+Example: Customize delimiter: 
+~~~
+```csvtable
+source: my_csv_file.csv
+csvOptions:
+  delimiter: ","
+```
